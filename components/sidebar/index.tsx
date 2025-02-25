@@ -1,8 +1,8 @@
 import React from "react";
 import Logo from "../logo";
 import { FaHome, FaPlane, FaWallet } from "react-icons/fa";
-import { MdAddCircle, MdSimCard, MdPayment } from "react-icons/md";
-import { GiReceiveMoney } from "react-icons/gi";
+import { MdSimCard, MdPayment } from "react-icons/md";
+
 import { FaMoneyBills, FaMoneyBillTransfer, FaTicket } from "react-icons/fa6";
 
 function Sidebar() {

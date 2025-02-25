@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import React, { MouseEventHandler } from "react";
-import { FadeLoader, PulseLoader, ScaleLoader } from "react-spinners";
+import { ScaleLoader } from "react-spinners";
 
 interface Props {
   title: string;

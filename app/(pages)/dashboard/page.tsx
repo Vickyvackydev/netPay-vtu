@@ -5,16 +5,9 @@ import { data } from "@/constants";
 import DashboardLayout from "@/layouts/DashboardLayout";
 import Image from "next/image";
 import React from "react";
-import {
-  FaEye,
-  FaMoneyBill,
-  FaPlane,
-  FaSimCard,
-  FaUser,
-  FaWallet,
-} from "react-icons/fa";
+import { FaEye, FaMoneyBill, FaPlane, FaUser, FaWallet } from "react-icons/fa";
 import { FaMoneyBillTransfer, FaTicket } from "react-icons/fa6";
-import { GiReceiveMoney } from "react-icons/gi";
+
 import { MdPayments, MdSimCard } from "react-icons/md";
 
 const shortcuts = [

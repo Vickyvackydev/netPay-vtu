@@ -9,7 +9,6 @@ function OtpVerification() {
   const [otp, setOtp] = useState<string[]>(new Array(6).fill(""));
   const [timer, setTimer] = useState<number>(120); // 5 minutes in seconds
   const inputRefs = useRef<HTMLInputElement | null[]>([]);
-  const [loading, setLoading] = useState(false);
 
   React.useEffect(() => {
     const countdown = setInterval(() => {
@@ -84,6 +83,7 @@ function OtpVerification() {
                 value={otp[index]}
                 onChange={(e) => handleChange(e, index)}
                 onKeyDown={(e) => handleKeyDown(e, index)}
+                onPaste={handlePaste}
                 // @ts-ignore
                 ref={(ref) => (inputRefs.current[index] = ref)}
                 className="h-12 w-12 rounded-lg border-2 border-gray-300 text-center text-xl focus:border-blue-500 focus:shadow-custom focus:outline-none"

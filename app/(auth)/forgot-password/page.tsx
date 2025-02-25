@@ -4,7 +4,6 @@ import { useRouter } from "next/navigation";
 import React from "react";
 
 function ForgotPassword() {
-  const handleclick = () => {};
   const router = useRouter();
   return (
     <div className="flex flex-col items-start">

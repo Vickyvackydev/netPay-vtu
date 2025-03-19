@@ -2,7 +2,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import { RootState } from "../store";
-import { actions } from "react-table";
 
 export interface GlobalState {
   open: boolean;

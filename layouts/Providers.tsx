@@ -5,6 +5,7 @@ import { Provider } from "react-redux";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { persistor, Store } from "@/states/store";
 import { queryClient } from "@/config";
+import { useRouter } from "next/navigation";
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   return (
@@ -17,3 +18,14 @@ export default function Providers({ children }: { children: React.ReactNode }) {
     </PersistGate>
   );
 }
+
+export const AuthGuard = ({ children }: { children: React.ReactNode }) => {
+  const { token } = Store.getState().auths;
+  const router = useRouter();
+
+  if (token === null) {
+    router.push("/sign-in");
+  }
+
+  return <>{children}</>;
+};

@@ -57,7 +57,7 @@ function Dashboard() {
     return colors[Math.floor(Math.random() * colors.length)];
   };
   return (
-    <DashboardLayout>
+    <>
       <div className="flex flex-col items-start gap-y-8">
         <div className="flex items-start flex-col gap-y-3">
           <span className="text-2xl font-semibold">Welcome, Victor.</span>
@@ -127,7 +127,7 @@ function Dashboard() {
           </div>
         </div>
       </div>
-    </DashboardLayout>
+    </>
   );
 }
 

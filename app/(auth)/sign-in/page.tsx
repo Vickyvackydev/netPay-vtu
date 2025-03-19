@@ -1,12 +1,15 @@
 "use client";
 import Button from "@/components/button";
 import { LOGIN } from "@/services/auth";
+import { setToken } from "@/states/slices/authReducer";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
 
 function SignIn() {
   const router = useRouter();
+  const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({
     email_or_phone: "",
@@ -34,6 +37,7 @@ function SignIn() {
       if (response) {
         toast.success(response?.message);
         router.replace("/dashboard");
+        dispatch(setToken(response?.data?.token));
       }
     } catch (error: any) {
       toast.error(error?.response?.data?.message);

@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import React, { MouseEventHandler } from "react";
-import { ScaleLoader } from "react-spinners";
+import { FadeLoader, ScaleLoader } from "react-spinners";
 
 interface Props {
   title: string;
@@ -61,7 +61,7 @@ const Button = ({
       //     fill="#fff"
       //   />
       // </svg>
-      <ScaleLoader color={loaderColor} className="scale-50" />
+      <FadeLoader color={loaderColor} className="scale-50 mb-5" />
     ) : (
       <span className={textStyle}>{title}</span>
     )}

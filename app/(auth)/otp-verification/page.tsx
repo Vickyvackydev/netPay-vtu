@@ -1,15 +1,23 @@
 "use client";
 import Button from "@/components/button";
+import { ResendOtp, VerifyOtp } from "@/services/auth";
+import { selectUser } from "@/states/slices/authReducer";
 import { useRouter } from "next/navigation";
 import React, { useRef, useState } from "react";
+import toast from "react-hot-toast";
+import { useSelector } from "react-redux";
 
 function OtpVerification() {
   const router = useRouter();
 
   const [otp, setOtp] = useState<string[]>(new Array(6).fill(""));
-  const [timer, setTimer] = useState<number>(120); // 5 minutes in seconds
+  const [timer, setTimer] = useState<number>(300); // 5 minutes in seconds
   const inputRefs = useRef<HTMLInputElement | null[]>([]);
-
+  const user = useSelector(selectUser);
+  const [loading, setLoading] = useState({
+    verifying: false,
+    resending: false,
+  });
   React.useEffect(() => {
     const countdown = setInterval(() => {
       setTimer((prev) => (prev > 0 ? prev - 1 : 0));
@@ -63,45 +71,95 @@ function OtpVerification() {
       });
     }
   };
+
+  const handleVerifyOtp = async () => {
+    setLoading({ ...loading, verifying: true });
+    const payload = {
+      email: user?.email,
+      otp: otp.join(""),
+    };
+
+    try {
+      const response = await VerifyOtp(payload);
+      if (response) {
+        toast.success(response?.message);
+        router.replace("/sign-in");
+        setOtp([]);
+      }
+    } catch (error: any) {
+      toast.error(error?.response?.data?.message);
+    } finally {
+      setLoading({ ...loading, verifying: false });
+    }
+  };
+  const handleResendOtp = async () => {
+    setLoading({ ...loading, resending: true });
+    const payload = {
+      email: user?.email,
+    };
+
+    try {
+      const response = await ResendOtp(payload);
+      if (response) {
+        toast.success(response?.message);
+        setTimer(300);
+      }
+    } catch (error: any) {
+      toast.error(error?.response?.data?.message);
+    } finally {
+      setLoading({ ...loading, resending: false });
+    }
+  };
   return (
     <div className="flex flex-col items-start">
-      <span className="text-default text-[32px] font-semibold">
-        OTP Verification
-      </span>
-      <div className="flex flex-col gap-y-4 mt-8">
-        <span className="text-defaultBlack text-[16px] font-medium">
+      <div className="flex flex-col items-start">
+        <span className="text-default text-16 font-semibold">
+          OTP Verification
+        </span>
+        <span className="text-defaultBlack text-sm font-medium">
           Check your email or phone number for an OTP code
         </span>
+      </div>
 
-        <div className="mt-6 flex flex-col gap-y-2 items-start">
-          <div className="flex items-center justify-center gap-x-3">
-            {otp.map((_, index) => (
-              <input
-                key={index}
-                type="text"
-                maxLength={1}
-                value={otp[index]}
-                onChange={(e) => handleChange(e, index)}
-                onKeyDown={(e) => handleKeyDown(e, index)}
-                onPaste={handlePaste}
-                // @ts-ignore
-                ref={(ref) => (inputRefs.current[index] = ref)}
-                className="h-12 w-12 rounded-lg border-2 border-gray-300 text-center text-xl focus:border-blue-500 focus:shadow-custom focus:outline-none"
-              />
-            ))}
-          </div>
-
-          <span className="text-defaultBlack">
-            This code expires in{" "}
-            <span className="text-[#008080]">{formattedTime}</span>
-          </span>
+      <div className="mt-6 flex flex-col gap-y-2 items-start">
+        <div className="flex items-center justify-center gap-x-3">
+          {otp.map((_, index) => (
+            <input
+              key={index}
+              type="text"
+              maxLength={1}
+              value={otp[index]}
+              onChange={(e) => handleChange(e, index)}
+              onKeyDown={(e) => handleKeyDown(e, index)}
+              onPaste={handlePaste}
+              // @ts-ignore
+              ref={(ref) => (inputRefs.current[index] = ref)}
+              className="h-10 w-10 rounded-lg border-2 border-gray-300 text-center text-xl focus:border-blue-500 focus:shadow-custom focus:outline-none"
+            />
+          ))}
         </div>
+
+        <span className="text-defaultBlack text-sm">
+          This code expires in{" "}
+          <span className="text-[#008080]">{formattedTime}</span>{" "}
+          {timer === 0 && (
+            <button
+              className="text-default text-sm font-medium"
+              onClick={handleResendOtp}
+            >
+              {loading.resending ? "please wait..." : "Resend"}
+            </button>
+          )}
+        </span>
       </div>
 
       <Button
         title="Verify"
-        handleClick={() => router.push("/user-details")}
-        btnStyle="bg-default w-full rounded-2xl  h-[60px] mt-10"
+        loading={loading.verifying}
+        handleClick={handleVerifyOtp}
+        disabled={loading.verifying}
+        loaderColor="#ffffff"
+        btnStyle="bg-default w-full rounded-2xl  h-[40px] mt-10 flex items-center justify-center"
         textStyle="text-white"
       />
     </div>

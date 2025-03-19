@@ -14,7 +14,7 @@ function AuthLayout({ children }: { children: React.ReactNode }) {
     >
       <div className="flex items-center justify-center flex-col gap-y-6">
         <Logo size={200} />
-        <div className="w-[641px] h-fit p-20 bg-white rounded-xl shadow-sm">
+        <div className="w-[441px] h-full p-10 bg-white rounded-xl shadow-sm">
           {children}
         </div>
       </div>

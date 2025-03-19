@@ -1,34 +1,84 @@
 "use client";
 import Button from "@/components/button";
+import { LOGIN } from "@/services/auth";
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { useState } from "react";
+import toast from "react-hot-toast";
 
 function SignIn() {
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
+  const [form, setForm] = useState({
+    email_or_phone: "",
+    password: "",
+  });
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+
+    setForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+  const handleLogin = async () => {
+    setLoading(true);
+
+    const payload = {
+      email_or_phone: form.email_or_phone,
+      password: form.password,
+    };
+
+    try {
+      const response = await LOGIN(payload);
+      if (response) {
+        toast.success(response?.message);
+        router.replace("/dashboard");
+      }
+    } catch (error: any) {
+      toast.error(error?.response?.data?.message);
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <div className="flex flex-col items-start">
-      <span className="text-default text-[32px] font-semibold">Sign In</span>
+      <div className="flex flex-col items-start">
+        <span className="text-default text-lg font-semibold">Sign In</span>
+        <span className="text-[16px] font-medium text-defaultBlack">
+          Enter your credentials to continue
+        </span>
+      </div>
       <div className="flex flex-col gap-y-4 mt-8 w-full">
         <input
           type="email"
+          name="email_or_phone"
+          value={form.email_or_phone}
+          onChange={handleInputChange}
           placeholder="Email address"
-          className="w-full border focus:outline-none focus:border-default focus:shadow-custom p-5 rounded-xl"
+          className="w-full border focus:outline-none focus:border-default focus:shadow-custom p-3 placeholder:text-sm rounded-xl"
         />
         <div className="flex flex-col gap-y-2 items-end">
           <input
             type="password"
-            placeholder="Email password"
-            className="w-full border focus:outline-none focus:border-default focus:shadow-custom p-5 rounded-xl"
+            name="password"
+            value={form.password}
+            onChange={handleInputChange}
+            placeholder="Password"
+            className="w-full border focus:outline-none focus:border-default focus:shadow-custom p-3 placeholder:text-sm rounded-xl"
           />
-          <span className="text-[16px] cursor-pointer text-[#1A3EEC] font-medium">
+          <span
+            onClick={() => router.push("/forgot-password")}
+            className="text-sm cursor-pointer text-[#1A3EEC] font-medium"
+          >
             Forgot password?
           </span>
         </div>
       </div>
 
       <div className="flex items-center gap-x-3 mt-5">
-        <div className="w-[25px] h-[25px] rounded-md border" />
-        <span className="text-[16px] font-medium text-defaultBlack">
+        <div className="w-[15px] h-[15px] rounded-md border" />
+        <span className="text-sm font-medium text-defaultBlack">
           {" "}
           Keep me logged in
         </span>
@@ -37,15 +87,18 @@ function SignIn() {
       <div className="flex items-center flex-col gap-y-3 w-full">
         <Button
           title="Continue"
-          handleClick={() => router.push("/otp-verification")}
-          btnStyle="bg-default w-full rounded-2xl  h-[60px] mt-10"
+          handleClick={handleLogin}
+          loading={loading}
+          disabled={loading}
+          loaderColor="#ffffff"
+          btnStyle="bg-default w-full rounded-2xl  h-[40px] mt-10 flex items-center justify-center"
           textStyle="text-white"
         />
-        <span className="text-[#111111]">
+        <span className="text-[#111111] text-sm">
           Don't have an account?{" "}
           <span
             className="text-[#2B85FE] underline cursor-pointer"
-            onClick={() => router.push("/sign-in")}
+            onClick={() => router.push("/register")}
           >
             Sign up
           </span>{" "}

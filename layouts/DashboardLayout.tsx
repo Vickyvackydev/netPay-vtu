@@ -15,7 +15,7 @@ export default function DashboardLayout({
 
       {/* Main Content Area */}
       <div className="flex flex-col w-full lg:w-full h-full">
-        <div className="max-w-[95%]">
+        <div className="max-w-full">
           <Header />
         </div>
         <div

@@ -4,7 +4,7 @@ import { TRANSACTION_COLUMN } from "@/components/table/columns";
 import { data } from "@/constants";
 import DashboardLayout from "@/layouts/DashboardLayout";
 import Image from "next/image";
-import React from "react";
+import React, { useMemo } from "react";
 import { FaEye, FaMoneyBill, FaPlane, FaUser, FaWallet } from "react-icons/fa";
 import { FaMoneyBillTransfer, FaTicket } from "react-icons/fa6";
 
@@ -45,42 +45,77 @@ const shortcuts = [
   },
 ];
 function Dashboard() {
+  const getRandomColor = () => {
+    const colors = [
+      "bg-red-500",
+      "bg-blue-500",
+      "bg-green-500",
+      "bg-yellow-500",
+      "bg-purple-500",
+      "bg-pink-500",
+    ];
+    return colors[Math.floor(Math.random() * colors.length)];
+  };
   return (
     <DashboardLayout>
       <div className="flex flex-col items-start gap-y-8">
         <div className="flex items-start flex-col gap-y-3">
-          <span className="text-[32px] font-semibold">Welcome, Victor.</span>
-          <div className="w-[400px] rounded-3xl flex justify-between items-center py-3 bg-default">
-            <div className="flex flex-col items-start gap-y-4 pl-5">
-              <div className="bg-white/50 flex items-center gap-x-1 p-1 rounded-2xl">
-                <FaEye className="text-white" />
-                <span className="text-xs font-normal text-white">
+          <span className="text-2xl font-semibold">Welcome, Victor.</span>
+          <div className="w-[400px] rounded-2xl flex justify-between items-center py-5 px-6 bg-gradient-to-r from-[#FFA500] to-[#FF8C00] shadow-lg">
+            <div className="flex flex-col items-start gap-y-4">
+              {/* Hide Balance Button */}
+              <button className="bg-white/30 hover:bg-white/40 transition-all duration-300 flex items-center gap-x-1 px-3 py-1 rounded-full backdrop-blur-md">
+                <FaEye className="text-white text-sm" />
+                <span className="text-xs font-medium text-white">
                   Hide Balance
                 </span>
-              </div>
+              </button>
+
+              {/* Balance Display */}
               <div className="flex flex-col text-white">
-                <span className="text-sm font-normal">Current Balance</span>
-                <span className="text-[37px] font-extrabold">N245,000</span>
+                <span className="text-sm font-medium opacity-90">
+                  Current Balance
+                </span>
+                <span className="text-[40px] font-extrabold tracking-wide">
+                  N245,000
+                </span>
               </div>
             </div>
-            <Image src={"./images/stars.svg"} width={150} height={150} alt="" />
+
+            {/* Decorative Image */}
+            <Image
+              src={"./images/stars.svg"}
+              width={100}
+              height={100}
+              alt=""
+              className="opacity-90"
+            />
           </div>
         </div>
         <div className="flex flex-col items-start gap-y-3 ">
-          <span className="text-[#111111] font-semibold text-2xl">
+          <span className="text-[#111111] font-semibold text-xl">
             Shortcuts
           </span>
-          <div className="flex items-center justify-center gap-x-6">
-            {shortcuts.map((item, index) => (
-              <div
-                key={index}
-                className="w-[128px] h-[129px] text-defaultBlack rounded-lg flex flex-col items-center gap-y-2 justify-center bg-default bg-opacity-35"
-              >
-                {/* <FaWallet size={40} /> */}
-                {item.icon}
-                <span className="text-[20px]">{item.label}</span>
-              </div>
-            ))}
+          <div className="grid grid-cols-4 gap-y-3 gap-x-3 w-full">
+            {shortcuts.map((item, index) => {
+              const bgColor = useMemo(getRandomColor, []); // Generate random color per render
+
+              return (
+                <div
+                  key={index}
+                  className="w-[250px] h-[100px] text-defaultBlack hover:border-default cursor-pointer rounded-lg flex items-center gap-x-3 justify-center bg-white border-2 shadow-box bg-opacity-35 p-4"
+                >
+                  {/* Icon container */}
+                  <div
+                    className={`w-[50px] h-[50px] flex items-center justify-center rounded-full ${bgColor}`}
+                  >
+                    <span className="text-[25px] text-white">{item.icon}</span>
+                  </div>
+
+                  <span className="text-[20px]">{item.label}</span>
+                </div>
+              );
+            })}
           </div>
         </div>
         <div className="flex flex-col items-start gap-y-4 w-full">

@@ -5,3 +5,10 @@ export interface RegisterTypes {
   password: string;
   password_confirmation: string;
 }
+
+export interface UserPayload {
+  full_name: string;
+  email: string;
+  phone: string;
+  id: string;
+}

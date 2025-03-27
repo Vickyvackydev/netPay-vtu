@@ -6,6 +6,7 @@ import DashboardLayout from "@/layouts/DashboardLayout";
 import { GetWalletBalance } from "@/services/payment";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import React, { useMemo } from "react";
 import {
   FaEye,
@@ -66,6 +67,7 @@ const getRandomColor = () => {
 };
 
 function Dashboard() {
+  const router = useRouter();
   const walletBalance = useQuery({
     queryKey: ["todos"],
     queryFn: GetWalletBalance,
@@ -99,7 +101,10 @@ function Dashboard() {
             </div>
 
             {/* Decorative Image */}
-            <button className="w-fit px-4 gap-x-3 text-white flex items-center justify-center bg-[#FFA500] transition-all duration-300 hover:scale-95 h-[40px] rounded-2xl shadow-lg">
+            <button
+              onClick={() => router.push("/add-money")}
+              className="w-fit px-4 gap-x-3 text-white flex items-center justify-center bg-[#FFA500] transition-all duration-300 hover:scale-95 h-[40px] rounded-2xl shadow-lg"
+            >
               <FaPlus /> Add Funds
             </button>
             <Image

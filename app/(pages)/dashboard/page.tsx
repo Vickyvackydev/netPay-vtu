@@ -3,9 +3,18 @@ import TableComponent from "@/components/table";
 import { TRANSACTION_COLUMN } from "@/components/table/columns";
 import { data } from "@/constants";
 import DashboardLayout from "@/layouts/DashboardLayout";
+import { GetWalletBalance } from "@/services/payment";
+import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import React, { useMemo } from "react";
-import { FaEye, FaMoneyBill, FaPlane, FaUser, FaWallet } from "react-icons/fa";
+import {
+  FaEye,
+  FaMoneyBill,
+  FaPlane,
+  FaPlus,
+  FaUser,
+  FaWallet,
+} from "react-icons/fa";
 import { FaMoneyBillTransfer, FaTicket } from "react-icons/fa6";
 
 import { MdPayments, MdSimCard } from "react-icons/md";
@@ -44,24 +53,31 @@ const shortcuts = [
     icon: <FaTicket size={20} />,
   },
 ];
+const getRandomColor = () => {
+  const colors = [
+    "bg-red-500",
+    "bg-blue-500",
+    "bg-green-500",
+    "bg-yellow-500",
+    "bg-purple-500",
+    "bg-pink-500",
+  ];
+  return colors[Math.floor(Math.random() * colors.length)];
+};
+
 function Dashboard() {
-  const getRandomColor = () => {
-    const colors = [
-      "bg-red-500",
-      "bg-blue-500",
-      "bg-green-500",
-      "bg-yellow-500",
-      "bg-purple-500",
-      "bg-pink-500",
-    ];
-    return colors[Math.floor(Math.random() * colors.length)];
-  };
+  const walletBalance = useQuery({
+    queryKey: ["todos"],
+    queryFn: GetWalletBalance,
+  });
+  console.log(walletBalance);
+
   return (
     <>
-      <div className="flex flex-col items-start gap-y-8">
-        <div className="flex items-start flex-col gap-y-3">
+      <div className="flex flex-col items-start gap-y-8 w-full">
+        <div className="flex items-start flex-col gap-y-3 w-full">
           <span className="text-2xl font-semibold">Welcome, Victor.</span>
-          <div className="w-[400px] rounded-2xl flex justify-between items-center py-5 px-6 bg-gradient-to-r from-[#FFA500] to-[#FF8C00] shadow-lg">
+          <div className="w-full relative rounded-2xl flex justify-between items-end py-5 px-6 bg-gradient-to-r from-[#FFA500] to-[#FF8C00] shadow-lg">
             <div className="flex flex-col items-start gap-y-4">
               {/* Hide Balance Button */}
               <button className="bg-white/30 hover:bg-white/40 transition-all duration-300 flex items-center gap-x-1 px-3 py-1 rounded-full backdrop-blur-md">
@@ -83,16 +99,19 @@ function Dashboard() {
             </div>
 
             {/* Decorative Image */}
+            <button className="w-fit px-4 gap-x-3 text-white flex items-center justify-center bg-[#FFA500] transition-all duration-300 hover:scale-95 h-[40px] rounded-2xl shadow-lg">
+              <FaPlus /> Add Funds
+            </button>
             <Image
               src={"./images/stars.svg"}
               width={100}
               height={100}
               alt=""
-              className="opacity-90"
+              className="opacity-90 absolute right-0 top-1"
             />
           </div>
         </div>
-        <div className="flex flex-col items-start gap-y-3 ">
+        <div className="flex flex-col items-start gap-y-3 w-full">
           <span className="text-[#111111] font-semibold text-xl">
             Shortcuts
           </span>
@@ -103,7 +122,7 @@ function Dashboard() {
               return (
                 <div
                   key={index}
-                  className="w-[250px] h-[100px] text-defaultBlack hover:border-default cursor-pointer rounded-lg flex items-center gap-x-3 justify-center bg-white border-2 shadow-box bg-opacity-35 p-4"
+                  className="w-full h-[100px] text-defaultBlack hover:border-default cursor-pointer rounded-lg flex items-center gap-x-3 justify-center bg-white border-2 shadow-box bg-opacity-35 p-4"
                 >
                   {/* Icon container */}
                   <div

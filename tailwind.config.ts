@@ -11,6 +11,7 @@ export default {
     extend: {
       colors: {
         default: "#FEA912",
+        customGray: "#7D7D7D",
         defaultBlack: "#4B5563",
         background: "var(--background)",
         foreground: "var(--foreground)",

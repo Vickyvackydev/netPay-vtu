@@ -1,5 +1,6 @@
 "use client";
 import Button from "@/components/button";
+import Modal from "@/components/modal";
 import { InitiatePayment, VerifyPayment } from "@/services/payment";
 import Image from "next/image";
 import Link from "next/link";
@@ -11,6 +12,7 @@ function AddMoney() {
     initiate: false,
     verify: false,
   });
+  const [paymentModal, setPaymentModal] = useState(false);
   const [amount, setAmount] = useState("");
   const [paymentMethod, setPaymentMethod] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
@@ -40,11 +42,13 @@ function AddMoney() {
         toast.success(response?.message);
         setSuccess(true);
         const { access_code, authorization_url, reference } = response?.data;
+
         setPaymentReference({
           access_code: access_code,
           authorization_url: authorization_url,
           reference: reference,
         });
+        setPaymentModal(true);
       }
     } catch (error: any) {
       toast.error(error?.response?.data?.message);
@@ -160,37 +164,36 @@ function AddMoney() {
             </div>
           </div>
         </div>
-        {success ? (
+        {success && (
           <div className="flex justify-center items-center">
             <Button
               loaderColor="#ffffff"
               loading={loading.verify}
               disabled={loading.verify}
               btnStyle="flex w-[440px] mt-5 h-[40px] rounded-lg items-center justify-center bg-default/80"
-              title={`${
-                showVerifyButton ? "Verify" : "Proceed to make payment"
-              }`}
+              title={`Verify`}
               textStyle="text-white"
-              handleClick={handleNextStep}
+              handleClick={handleVerifyPayment}
             />
           </div>
-        ) : (
-          <>
-            {paymentMethod && (
-              <div className="flex justify-center items-center">
-                <Button
-                  loading={loading.initiate}
-                  loaderColor="#ffffff"
-                  disabled={loading.initiate || !amount.trim()}
-                  btnStyle="flex w-[440px] mt-5 h-[40px] rounded-lg items-center justify-center bg-default/80"
-                  title="Proceed"
-                  textStyle="text-white"
-                  handleClick={handleInitiatePayment}
-                />
-              </div>
-            )}
-          </>
         )}
+
+        <>
+          {paymentMethod && (
+            <div className="flex justify-center items-center">
+              <Button
+                loading={loading.initiate}
+                loaderColor="#ffffff"
+                disabled={loading.initiate || !amount.trim()}
+                btnStyle="flex w-[440px] mt-5 h-[40px] rounded-lg items-center justify-center bg-default/80"
+                title="Proceed"
+                textStyle="text-white"
+                handleClick={handleInitiatePayment}
+              />
+            </div>
+          )}
+        </>
+
         {/* {showVerifyButton && (
           <div className="flex justify-center items-center">
             <Button
@@ -204,6 +207,19 @@ function AddMoney() {
           </div>
         )} */}
       </div>
+      <Modal
+        isOpen={paymentModal}
+        isClose={() => setPaymentModal(false)}
+        isBTnTrue
+        maxWidth="w-[500px]"
+        edges="rounded-xl"
+      >
+        <iframe
+          title="payment process"
+          src={paymentReference.authorization_url}
+          className="w-full h-[500px]"
+        />
+      </Modal>
     </div>
   );
 }

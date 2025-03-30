@@ -23,7 +23,7 @@ export const AuthGuard = ({ children }: { children: React.ReactNode }) => {
   const { token } = Store.getState().auths;
   const router = useRouter();
 
-  if (token === null) {
+  if (!token) {
     router.push("/sign-in");
   }
 

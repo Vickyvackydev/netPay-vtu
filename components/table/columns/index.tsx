@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { createColumnHelper } from "@tanstack/react-table";
+import moment from "moment";
 
 const columnHelper = createColumnHelper<any>();
 
@@ -28,25 +29,25 @@ export const TRANSACTION_COLUMN = [
           />
         )}
         <span className="text-sm font-medium text-defaultBlack">
-          {row.original.transaction_detail}
+          {row.original.transaction_value}
         </span>
       </div>
     ),
   }),
   columnHelper.accessor("date", {
     header: "Date",
-    cell: () => (
+    cell: ({ row }: { row: any }) => (
       <span className="text-sm font-normal text-[#4B5563]">
-        {`${new Date().getDate()}/${
-          new Date().getMonth() + 1
-        }/${new Date().getFullYear()}`}
+        {moment(row?.original?.created_at).format("MMM D, YYYY")}
       </span>
     ),
   }),
   columnHelper.accessor("time", {
     header: "Time",
-    cell: () => (
-      <span className="text-sm font-medium text-[#111827]">10:12 pm</span>
+    cell: ({ row }: { row: any }) => (
+      <span className="text-sm font-medium text-[#111827]">
+        {row?.original?.time}
+      </span>
     ),
   }),
   columnHelper.accessor("status", {
@@ -67,7 +68,7 @@ export const TRANSACTION_COLUMN = [
     header: "Type",
     cell: ({ row }) => (
       <span className="text-sm font-medium text-[#111827]">
-        {row.original.transaction_type}
+        {row.original.transaction_type === "wallet_funding" && "wallet funding"}
       </span>
     ),
   }),
@@ -76,12 +77,12 @@ export const TRANSACTION_COLUMN = [
     cell: ({ row }) => (
       <span
         className={`text-xl font-medium ${
-          row.original.action_type === "sent"
+          row.original.transaction_type.split("_").includes("funding")
             ? "text-[#008080]"
             : "text-[#D10019]"
         }`}
       >
-        {row.original.action_type === "sent"
+        {row.original.transaction_type.split("_").includes("funding")
           ? `+${row.original.amount}`
           : `-${row.original.amount}`}
       </span>

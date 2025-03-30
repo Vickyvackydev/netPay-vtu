@@ -52,6 +52,7 @@ function AddMoney() {
       }
     } catch (error: any) {
       toast.error(error?.response?.data?.message);
+      setSuccess(false);
     } finally {
       setLoading({ ...loading, initiate: false });
     }
@@ -171,7 +172,7 @@ function AddMoney() {
               loading={loading.verify}
               disabled={loading.verify}
               btnStyle="flex w-[440px] mt-5 h-[40px] rounded-lg items-center justify-center bg-default/80"
-              title={`Verify`}
+              title={`Verify payment`}
               textStyle="text-white"
               handleClick={handleVerifyPayment}
             />

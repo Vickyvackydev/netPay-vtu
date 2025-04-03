@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import {
   useReactTable,
@@ -19,11 +19,19 @@ interface TableProps {
 }
 
 function TableComponent({ DATA, COLUMNS }: TableProps) {
+  const [pagination, setPagination] = useState({
+    pageIndex: 0,
+    pageSize: 5,
+  });
   const table = useReactTable({
     data: DATA,
     columns: COLUMNS,
     getCoreRowModel: getCoreRowModel(),
+    state: {
+      pagination,
+    },
     getPaginationRowModel: getPaginationRowModel(),
+    onPaginationChange: setPagination,
   });
 
   return (
@@ -71,7 +79,7 @@ function TableComponent({ DATA, COLUMNS }: TableProps) {
             disabled={!table.getCanPreviousPage()}
             className="flex h-[36px] w-[100px] items-center justify-center rounded-md border border-[#E5E7EB] bg-[#F9FAFB] text-sm font-normal text-[#111827]"
           >
-            <FaChevronLeft size={20} />
+            {/* <FaChevronLeft size={20} /> */}
             <span>Previous</span>
           </button>
           <div className="flex items-center gap-x-2">
@@ -97,7 +105,7 @@ function TableComponent({ DATA, COLUMNS }: TableProps) {
             className="flex h-[36px] w-[100px] items-center justify-center rounded-md border border-[#E5E7EB] bg-[#F9FAFB] text-sm font-normal text-[#111827]"
           >
             <span>Next</span>
-            <FaChevronRight size={20} />
+            {/* <FaChevronRight size={20} /> */}
           </button>
         </div>
       )}

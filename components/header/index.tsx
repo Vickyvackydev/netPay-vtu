@@ -6,11 +6,17 @@ import { useSelector } from "react-redux";
 
 function Header() {
   const user = useSelector(selectUser);
+  const getFirstTwoLetters = user?.full_name
+    ?.split(" ")
+    .map((word) => word[0])
+    .join("");
   return (
     <div className="flex items-center justify-end py-2 w-full px-3">
       <div className="flex items-center gap-x-3 ">
         <div className="w-[35px] h-[35px] rounded-full flex items-center justify-center border border-default">
-          <span className="text-lg font-medium text-defaultBlack">VV</span>
+          <span className="text-lg font-medium text-defaultBlack">
+            {getFirstTwoLetters}
+          </span>
         </div>
         <span className="text-[16px] text-defaultBlack">{user?.full_name}</span>
         <FaChevronDown color="#4b5563" size={15} />

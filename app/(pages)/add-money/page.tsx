@@ -4,7 +4,7 @@ import Modal from "@/components/modal";
 import { InitiatePayment, VerifyPayment } from "@/services/payment";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 function AddMoney() {
@@ -81,16 +81,6 @@ function AddMoney() {
     }
   };
 
-  const handleNextStep = () => {
-    if (showVerifyButton) {
-      handleVerifyPayment();
-    } else {
-      setShowVerifyButton(true);
-      setTimeout(() => {
-        window.open(paymentReference.authorization_url, "_blank");
-      }, 1000);
-    }
-  };
   return (
     <div className="w-full flex flex-col gap-y-6 items-start">
       <div className="flex flex-col items-start gap-y-3">
@@ -180,7 +170,7 @@ function AddMoney() {
         )}
 
         <>
-          {paymentMethod && (
+          {paymentMethod && !success && (
             <div className="flex justify-center items-center">
               <Button
                 loading={loading.initiate}
@@ -219,6 +209,17 @@ function AddMoney() {
           title="payment process"
           src={paymentReference.authorization_url}
           className="w-full h-[500px]"
+          onLoad={(e) => {
+            const iframe = e.target as HTMLIFrameElement;
+            if (
+              iframe?.contentWindow?.location.href.includes(
+                "https://game.benefixapp.com/"
+              )
+            ) {
+              setPaymentModal(false);
+              toast.success("Payment successful!");
+            }
+          }}
         />
       </Modal>
     </div>
@@ -226,3 +227,4 @@ function AddMoney() {
 }
 
 export default AddMoney;
+// ("api/v1/payment-success?trxref=Fintech.africa-67ECF6C700652.4&reference=Fintech.africa-67ECF6C700652.4");

@@ -88,6 +88,7 @@ function Dashboard() {
     queryKey: ["transactions"],
     queryFn: GetTransactions,
   });
+
   const user = useSelector(selectUser);
 
   const [hideBalance, setHideBalance] = useState(false);

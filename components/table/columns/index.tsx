@@ -77,12 +77,12 @@ export const TRANSACTION_COLUMN = [
     cell: ({ row }) => (
       <span
         className={`text-xl font-medium ${
-          row.original.transaction_type.split("_").includes("funding")
+          row.original.status === "successful"
             ? "text-[#008080]"
             : "text-[#D10019]"
         }`}
       >
-        {row.original.transaction_type.split("_").includes("funding")
+        {row.original.status === "successful"
           ? `+${row.original.amount}`
           : `-${row.original.amount}`}
       </span>

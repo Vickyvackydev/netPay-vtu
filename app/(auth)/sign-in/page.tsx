@@ -1,7 +1,7 @@
 "use client";
 import Button from "@/components/button";
 import { LOGIN } from "@/services/auth";
-import { setToken } from "@/states/slices/authReducer";
+import { setToken, setUser } from "@/states/slices/authReducer";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
@@ -36,6 +36,7 @@ function SignIn() {
       const response = await LOGIN(payload);
       if (response) {
         toast.success(response?.message);
+        dispatch(setUser(response?.data));
         router.replace("/dashboard");
         dispatch(setToken(response?.data?.token));
       }
